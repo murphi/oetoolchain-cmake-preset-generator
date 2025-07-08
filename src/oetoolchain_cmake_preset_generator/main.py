@@ -42,7 +42,7 @@ def resolve_environment_variables(environment: Dict[str, str]) -> Dict[str, str]
 
 
 def get_oe_toolchain_path(environment: Dict[str, str]) -> str:
-    return f"{environment["OECORE_NATIVE_SYSROOT"]}/usr/share/cmake/OEToolchainConfig.cmake"
+    return environment["OECORE_NATIVE_SYSROOT"] + "/usr/share/cmake/OEToolchainConfig.cmake"
 
 
 def get_sdk_base_path(environment: Dict[str, str]) -> str:
