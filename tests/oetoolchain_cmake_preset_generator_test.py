@@ -14,6 +14,7 @@ from oetoolchain_cmake_preset_generator.main import (
 
 test_data_environment_parse_line = [
     ("export GDB=arm-foo-linux-gnueabi-gdb\n", "GDB", "arm-foo-linux-gnueabi-gdb"),
+    ("export CPP=\"\"\n", "CPP", ""),
     (
         'export CXXFLAGS=" -O2 -pipe -g -feliminate-unused-debug-types "\n',
         "CXXFLAGS",

@@ -14,7 +14,7 @@ VERSION = "0.1"
 
 
 def environment_parse_line(line: str) -> Dict[str, str]:
-    m = re.search(r'export\s+(\w+)\s*=\s*"?(.+?)"?$', line)
+    m = re.search(r'export\s+(\w+)\s*=\s*"?(.*?)"?$', line)
     return {m[1]: m[2]} if m else {}
 
 
