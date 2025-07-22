@@ -1,5 +1,6 @@
 # Copyright (C) 2025 Martin Engelmann <murphi@posteo.de>
 
+import os
 import pytest
 from oetoolchain_cmake_preset_generator.main import (
     environment_parse_line,
@@ -77,6 +78,25 @@ def test_resolve_environment_variables():
     environment = {"A": "a", "B": "foo $A foo"}
     result = resolve_environment_variables(environment)
     assert result == {"A": "a", "B": "foo a foo"}
+
+def test_resolve_environment_variables_self_reference():
+    environment = {"A": "$A", "B": "foo $A foo"}
+    result = resolve_environment_variables(environment)
+    assert result == {"A": "$A", "B": "foo $A foo"}
+
+def test_resolve_environment_variables_fallback_to_os_environment():
+    os.environ["A"] = "a from os.environ"
+    environment = {"A": "$A", "B": "foo $A foo"}
+    result = resolve_environment_variables(environment)
+    assert result == {"A": "a from os.environ", "B": "foo a from os.environ foo"}
+    del os.environ["A"]
+
+def test_resolve_environment_variables_prefer_local_resolution():
+    os.environ["A"] = "a from os.environ"
+    environment = {"A": "a from local environment", "B": "foo $A foo"}
+    result = resolve_environment_variables(environment)
+    assert result == {"A": "a from local environment", "B": "foo a from local environment foo"}
+    del os.environ["A"]
 
 
 def test_toolchain_parse_line():

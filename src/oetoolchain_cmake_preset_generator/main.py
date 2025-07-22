@@ -3,6 +3,7 @@
 # Copyright (C) 2025 Martin Engelmann <murphi@posteo.de>
 
 from typing import Dict, List, Sequence
+import os
 import re
 import pathlib
 import argparse
@@ -33,13 +34,15 @@ def environment_parse_file(filename: str) -> Dict[str, str]:
 def resolve_environment_variables(environment: Dict[str, str]) -> Dict[str, str]:
     resolved = {}
     for key, value in environment.items():
-        # Replace occurrences of $VAR with the value of VAR
         resolved_value = value
+        # Replace occurrences of $VAR with the value of VAR from the environment or os.environ
         for var in environment:
             resolved_value = resolved_value.replace(f"${var}", environment[var])
+        for var in environment:
+            if f"${var}" in resolved_value and var in os.environ:
+                resolved_value = resolved_value.replace(f"${var}", os.environ[var])
         resolved[key] = resolved_value
     return resolved
-
 
 def get_oe_toolchain_path(environment: Dict[str, str]) -> str:
     return environment["OECORE_NATIVE_SYSROOT"] + "/usr/share/cmake/OEToolchainConfig.cmake"
